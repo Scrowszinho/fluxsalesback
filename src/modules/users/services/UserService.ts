@@ -1,16 +1,35 @@
+import { validate } from 'class-validator';
+import { ApiError } from '../../../utils/apiError';
+import { saveUser, getUserByEmail } from '../repositories/UserRepository';
+import { IUserCreate } from '../dto/user.interface';
 import { CreateUserDto } from '../dto/CreateUserDto';
-import { User } from '../models/User';
-import { UserRepository } from '../repositories/UserRepository';
+import { plainToClass } from 'class-transformer';
 
-export class UserService {
+export const createUser = async (user: IUserCreate) => {
+  const userDto = plainToClass(CreateUserDto, user);
+  const validationErrors = await validate(userDto, { skipMissingProperties: false });
 
-  constructor(private userRepository: UserRepository) { }
-
-  async createUser(userData: CreateUserDto): Promise<User> {
-    const existingUser = await this.userRepository.findOne({ email: userData.email });
-    if (existingUser) {
-      throw new NotFoundException('Este email já está em uso.');
-    }
-    return this.userRepository.save(userData);
+  if (validationErrors.length > 0) {
+    throw new ApiError(400, 'Algum campo está vazio');
   }
-}
+
+  if (await isEmailUsed(user.email)) {
+    throw new ApiError(400, 'Email já está em uso');
+  }
+
+  return await saveUser(user);
+};
+
+export const isEmailUsed = async (email: string) => {
+  let used = false;
+  await getUserByEmail(email).then((user) => {
+    if(user?.email) {      
+      used = true
+    } else {
+      used = false
+    }
+  }, (err) => {
+    throw new ApiError(400, err.message);
+  })
+  return used;
+};

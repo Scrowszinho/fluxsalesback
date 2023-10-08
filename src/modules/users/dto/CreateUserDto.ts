@@ -14,7 +14,7 @@ export class CreateUserDto {
   password: string;
 
   @IsNotEmpty({ message: 'O campo "data de nascimento" não pode estar vazio.' })
-  born_date: Date;
+  born_date: string;
 
   @IsNotEmpty({ message: 'O campo "cpf" não pode estar vazio.' })
   document: string;

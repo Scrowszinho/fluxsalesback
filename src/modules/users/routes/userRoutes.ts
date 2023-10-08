@@ -1,14 +1,9 @@
-import { Router } from 'express';
-import { UserController } from '../controllers/UserController';
-import { UserService } from '../services/UserService';
-import { UserRepository } from '../repositories/UserRepository';
+import express from 'express';
+import { register } from '../controllers/UserController';
+const router =  express.Router();
 
-const router = Router();
-const repositories = new UserRepository();
-const service = new UserService(repositories);
-const userController = new UserController(service);
-
-router.post('/', userController.createUser);
+router
+  .post('/', register)
 
 
 export default router;

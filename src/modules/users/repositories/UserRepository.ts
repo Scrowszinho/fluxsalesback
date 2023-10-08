@@ -1,8 +1,16 @@
-import { User } from '../models/User';
-import { CreateUserDto } from '../dto/CreateUserDto';
+import dataSource from '../../../shared/db/dataSource';
+import { IUserCreate } from '../dto/user.interface';
 
-export class UserRepository {
-    save(user: CreateUserDto): Promise<User> {
-        return new Promise<User>((resolve, reject) => {});
-    }
+export const saveUser = async (user: IUserCreate) => {  
+  const newUser = await dataSource.user.create({
+    data: user
+  });
+  return newUser;
+};
+
+export const getUserByEmail = async (email: string) => {  
+  const user = await dataSource.user.findFirst({ where: {
+    email
+  } });  
+  return user;
 }

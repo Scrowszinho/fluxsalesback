@@ -14,11 +14,11 @@ export const createRole = async (role: string) => {
 
 export const getRoleById = async (id: number) => {
   if (!id) {
-    throw new ApiError(400, 'Erro ao localizar Perfil de usuário');
+    throw new ApiError(404, 'Erro ao localizar Perfil de usuário');
   }
   const role = await findRoleById(id);
   if (!role?.id) {
-    throw new ApiError(400, 'Perfil de usuário não encontrado');
+    throw new ApiError(404, 'Perfil de usuário não encontrado');
   }
   return await role;
 }
@@ -26,7 +26,7 @@ export const getRoleById = async (id: number) => {
 export const setActiveOrInactiveRole = async (id: number, active: boolean) => {
   const role = await getRoleById(id);
   if (!role?.id) {
-    throw new ApiError(400, 'Perfil de usuário não encontrado');
+    throw new ApiError(404, 'Perfil de usuário não encontrado');
   }
   return await activeOrInactiveRole(id, active);
 };

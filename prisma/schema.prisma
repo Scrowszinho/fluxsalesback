@@ -1,0 +1,91 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model users {
+  id            Int             @id @default(autoincrement())
+  name          String
+  email         String          @unique
+  password      String
+  document      String          @unique
+  phone         String          @unique
+  born_date     String
+  active        Boolean         @default(true)
+  created_date  DateTime        @default(now())
+  updated_at    DateTime        @updatedAt
+  user_activate user_activate[]
+  products      products[]
+  products_bids products_bids[]
+}
+
+model roles {
+  id                Int                 @id @default(autoincrement())
+  name              String
+  active            Boolean             @default(true)
+  created_date      DateTime            @default(now())
+  updated_at        DateTime            @updatedAt
+  roles_permissions roles_permissions[]
+}
+
+model permissions {
+  id                Int                 @id @default(autoincrement())
+  name              String
+  unique_name       String              @unique
+  active            Boolean             @default(true)
+  created_date      DateTime            @default(now())
+  updated_at        DateTime            @updatedAt
+  description       String
+  roles_permissions roles_permissions[]
+}
+
+model roles_permissions {
+  id            Int         @id @default(autoincrement())
+  role_id       Int
+  permission_id Int
+  roles         roles       @relation(fields: [role_id], references: [id])
+  permissions   permissions @relation(fields: [permission_id], references: [id])
+}
+
+model user_activate {
+  id         Int      @id @default(autoincrement())
+  name       String
+  user_id    Int
+  start_date DateTime @default(now())
+  end_date   DateTime
+  user       users    @relation(fields: [user_id], references: [id])
+}
+
+model products {
+  id             Int      @id @default(autoincrement())
+  name           String
+  user_id        Int
+  weight         Float
+  description    String
+  active         Boolean  @default(true)
+  created_date   DateTime @default(now())
+  updated_at     DateTime @updatedAt
+  value_interval Float
+  final_value    Float    @default(0)
+  final_date     DateTime
+
+  user          users           @relation(fields: [user_id], references: [id])
+  products_bids products_bids[]
+}
+
+model products_bids {
+  id           Int      @id @default(autoincrement())
+  value        Float
+  product_id   Int
+  user_id      Int
+  active       Boolean  @default(true)
+  created_date DateTime @default(now())
+  updated_at   DateTime @updatedAt
+
+  user    users    @relation(fields: [user_id], references: [id])
+  product products @relation(fields: [product_id], references: [id])
+}

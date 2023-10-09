@@ -1,6 +1,6 @@
 import { validate } from 'class-validator';
 import { ApiError } from '../../../utils/apiError';
-import { saveUser, getUserByEmail } from '../repositories/UserRepository';
+import { saveUser, getUserByEmail } from '../repositories/UserRepositories';
 import { IUserCreate } from '../dto/user.interface';
 import { CreateUserDto } from '../dto/CreateUserDto';
 import { plainToClass } from 'class-transformer';

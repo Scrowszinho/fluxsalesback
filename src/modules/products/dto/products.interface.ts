@@ -4,5 +4,4 @@ export interface ICreateProduct {
   weight: number;
   description: string;
   value_interval: number;
-  final_date: Date;
 }

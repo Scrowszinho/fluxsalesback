@@ -13,7 +13,7 @@ export const getLastBidByOfferId = async (id: number) => {
         offer_id: id
     },
     orderBy: {
-      value: 'asc',
+      value: 'desc',
     },
   });
 };

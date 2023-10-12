@@ -7,23 +7,28 @@ import { plainToClass } from 'class-transformer';
 import { hashPassword } from '../../../utils/encrypt';
 
 export const createUser = async (user: IUserCreate) => {
-  const userDto = plainToClass(CreateUserDto, user);
-  const validationErrors = await validate(userDto, {
-    skipMissingProperties: false,
-  });
-
-  if (validationErrors.length > 0) {
-    throw new ApiError(400, 'Algum campo está vazio');
+  try {
+    const userDto = plainToClass(CreateUserDto, user);
+    const validationErrors = await validate(userDto, {
+      skipMissingProperties: false,
+    });
+  
+    if (validationErrors.length > 0) {
+      throw new ApiError(400, 'Algum campo está vazio');
+    }
+  
+    if (await isEmailUsed(user.email)) {
+      throw new ApiError(400, 'Email já está em uso');
+    }
+  
+    const password = await hashPassword(user.password);
+    user.password = password;
+  
+    const newUser = await saveUser(user);
+    return newUser;
+  } catch (err) {
+    throw new ApiError(400, 'Ocorreu algum erro na criação de usuario');
   }
-
-  if (await isEmailUsed(user.email)) {
-    throw new ApiError(400, 'Email já está em uso');
-  }
-
-  const password = await hashPassword(user.password);
-  user.password = password;
-
-  return await saveUser(user);
 };
 
 export const isEmailUsed = async (email: string) => {

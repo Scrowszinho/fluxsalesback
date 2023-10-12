@@ -36,8 +36,24 @@ export const getCompleteOffer = async (id: number) => {
       id,
     },
     include: {
-      offer_bid: true,
-      product: true,
+      offer_bid: {
+        include: {
+          user: {
+            select: {
+              name: true,
+            },
+          },
+        },
+      },
+      product: {
+        include: {
+          user: {
+            select: {
+              name: true,
+            },
+          },
+        },
+      },
     },
   });
 };

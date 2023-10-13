@@ -12,7 +12,7 @@ import {
 
 export const createPermission = async (data: IPermissionCreate) => {
   const permission = await savePermission(data);
-  return await permission;
+  return permission;
 };
 
 export const getPermissionsById = async (id: number) => {
@@ -23,7 +23,7 @@ export const getPermissionsById = async (id: number) => {
   if (!permission?.id) {
     throw new ApiError(404, 'Permissão não encontrado');
   }
-  return await permission;
+  return permission;
 };
 
 export const savePermissionsToRole = async (data: IPermissionToRoleCreate) => {

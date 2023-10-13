@@ -20,7 +20,7 @@ model users {
   updated_at    DateTime        @updatedAt
   user_activate user_activate[]
   products      products[]
-  products_bids products_bids[]
+  offer_bid     offer_bid[]
 }
 
 model roles {
@@ -70,22 +70,35 @@ model products {
   created_date   DateTime @default(now())
   updated_at     DateTime @updatedAt
   value_interval Float
+  vale           Float    @default(0)
   final_value    Float    @default(0)
-  final_date     DateTime
 
-  user          users           @relation(fields: [user_id], references: [id])
-  products_bids products_bids[]
+  user   users    @relation(fields: [user_id], references: [id])
+  offers offers[]
 }
 
-model products_bids {
+model offers {
+  id           Int      @id @default(autoincrement())
+  active       Boolean  @default(true)
+  created_date DateTime @default(now())
+  updated_at   DateTime @updatedAt
+  start_date   DateTime
+  end_date     DateTime
+  product_id   Int      @unique
+
+  product   products    @relation(fields: [product_id], references: [id])
+  offer_bid offer_bid[]
+}
+
+model offer_bid {
   id           Int      @id @default(autoincrement())
   value        Float
-  product_id   Int
+  offer_id     Int
   user_id      Int
   active       Boolean  @default(true)
   created_date DateTime @default(now())
   updated_at   DateTime @updatedAt
 
-  user    users    @relation(fields: [user_id], references: [id])
-  product products @relation(fields: [product_id], references: [id])
+  user   users  @relation(fields: [user_id], references: [id])
+  offers offers @relation(fields: [offer_id], references: [id])
 }

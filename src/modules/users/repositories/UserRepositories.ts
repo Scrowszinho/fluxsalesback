@@ -1,7 +1,7 @@
 import dataSource from '../../../shared/db/dataSource';
 import { IUserCreate } from '../dto/user.interface';
 
-export const saveUser = async (user: IUserCreate) => {  
+export const saveUser = async (user: IUserCreate) => {    
   const newUser = await dataSource.users.create({
     data: user
   });

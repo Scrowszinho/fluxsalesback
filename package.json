@@ -2,7 +2,8 @@
   "scripts": {
     "start": "nodemon main.ts",
     "generate": "npx prisma generate",
-    "migrate": "npx prisma migrate dev"
+    "migrate": "npx prisma migrate dev",
+    "generate-module": "node ./src/utils/generateModule.ts"
   },
   "dependencies": {
     "@prisma/client": "^5.4.1",

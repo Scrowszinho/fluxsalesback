@@ -2,22 +2,36 @@ version: '3'
 name: 'fluxsales'
 
 services:
-  backend:
-    image: backend-fluxsales
+  backend-fluxsales:
+    container_name: backend-fluxsales
+    hostname: fluxsales
+    build: ./main.ts
+    volumes:
+      - "./backend-fluxsales:/home/node/main"
     ports:
       - "3000:3000"
+    command: npm run start
     networks:
       - fluxsales
-  
+
   rabbitmq:
-    container_name: ads_rabbitmq
-    image: rabbitmq:3.12-management
-    restart: unless-stopped
-    environment:
-      RABBITMQ_DEFAULT_USER: admin
-      RABBITMQ_DEFAULT_PASS: 123
+    image: rabbitmq:3.8.25-management-alpine
+    container_name: rabbitmq-fluxsales
     ports:
-      - 15672:15672
-      - 5672:5672
+        - 5672:5672
+        - 15672:15672
+    environment:
+      - RABBITMQ_DEFAULT_USER=root
+      - RABBITMQ_DEFAULT_PASS=1234
+    volumes:
+        - ./rabbitmq/data/:/var/lib/rabbitmq/
+        - ./rabbitmq/log/:var/log/rabbitmq
+    links:
+      - backend-fluxsales
     networks:
       - fluxsales
+
+networks:
+  fluxsales:
+    name: fluxsales
+    driver: bridge

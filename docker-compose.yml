@@ -4,10 +4,11 @@ name: 'fluxsales'
 services:
   backend-fluxsales:
     container_name: backend-fluxsales
-    hostname: fluxsales
-    build: ./main.ts
+    build:
+      context: .
+      dockerfile: Dockerfile
     volumes:
-      - "./backend-fluxsales:/home/node/main"
+      - ./backend-fluxsales:/home/node/main
     ports:
       - "3000:3000"
     command: npm run start
@@ -23,10 +24,7 @@ services:
     environment:
       - RABBITMQ_DEFAULT_USER=root
       - RABBITMQ_DEFAULT_PASS=1234
-    volumes:
-        - ./rabbitmq/data/:/var/lib/rabbitmq/
-        - ./rabbitmq/log/:var/log/rabbitmq
-    links:
+    depends_on:
       - backend-fluxsales
     networks:
       - fluxsales

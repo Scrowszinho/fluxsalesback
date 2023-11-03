@@ -1,6 +1,6 @@
-FROM node:18
+FROM node:14
 
-WORKDIR /src/app
+WORKDIR /home/node/app
 COPY . .
 RUN npm install
 EXPOSE 3000

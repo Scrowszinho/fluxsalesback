@@ -2,7 +2,8 @@
   "scripts": {
     "start": "nodemon main.ts",
     "generate": "npx prisma generate",
-    "migrate": "npx prisma migrate dev"
+    "migrate": "npx prisma migrate dev",
+    "generate-module": "node ./src/utils/generateModule.ts"
   },
   "dependencies": {
     "@prisma/client": "^5.4.1",
@@ -10,14 +11,17 @@
     "bcrypt": "^5.1.1",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.0",
+    "dotenv": "^16.3.1",
     "express": "^4.18.2",
-    "express-openid-connect": "^2.17.0",
+    "express-session": "^1.17.3",
+    "keycloak-connect": "^22.0.5",
     "nodemon": "^3.0.1",
     "ts-node": "^10.9.1",
     "typescript": "^5.2.2"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.0",
+    "@types/express-session": "^1.17.9",
     "prisma": "^5.4.1"
   }
 }

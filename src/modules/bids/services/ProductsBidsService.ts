@@ -13,6 +13,10 @@ export const createNewBid = async (data: IBid) => {
     if(!offer.id) {
       throw new ApiError(400, 'A oferta ainda não foi criada');
     }
+  
+    if(offer.start_date > new Date()) {
+      throw new ApiError(400, 'A oferta ainda não esta ativa');
+    }
 
     if (!lastBid?.id) {      
       const updateOffer = updateTimeOfferByBid(data.offer_id)

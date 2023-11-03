@@ -5,14 +5,15 @@ import permissionsRoutes from './modules/permissions';
 import productsRoutes from './modules/products';
 import bidsRoutes from './modules/bids';
 import offersRoutes from './modules/offers';
+import { requiresAuth } from 'express-openid-connect';
 
 const router = express.Router();
 
 router.use('/users', usersRoutes);
-router.use('/roles', rolesRoutes);
-router.use('/permissions', permissionsRoutes);
-router.use('/products', productsRoutes);
-router.use('/offers', offersRoutes)
-router.use('/bids', bidsRoutes);
+router.use('/roles', requiresAuth(), rolesRoutes);
+router.use('/permissions', requiresAuth(), permissionsRoutes);
+router.use('/products', requiresAuth(), productsRoutes);
+router.use('/offers', requiresAuth(), offersRoutes)
+router.use('/bids', requiresAuth(), bidsRoutes);
 
 export default router;

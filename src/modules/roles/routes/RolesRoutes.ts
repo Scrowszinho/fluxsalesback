@@ -1,14 +1,15 @@
 import express from 'express';
 import { activeOrInactive, getById, register } from '../controllers/RolesController';
+import keycloak from '@config/keycloak';
 const router =  express.Router();
 
 router
-  .post('/', register)
+  .post('/', keycloak.protect(), register)
 
 router
-  .get('/:id', getById)
+  .get('/:id', keycloak.protect(), getById)
 
 router.
-    post('/activate', activeOrInactive)
+    post('/activate', keycloak.protect(), activeOrInactive)
 
 export default router;

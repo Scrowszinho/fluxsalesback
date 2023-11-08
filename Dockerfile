@@ -1,7 +1,8 @@
-FROM node:18
+FROM node:16
 
-WORKDIR /src/app
+WORKDIR /home/node/app
 COPY . .
 RUN npm install
+RUN npm rebuild bcrypt --build-from-source
 EXPOSE 3000
 CMD ["npm", "start"]

@@ -3,12 +3,12 @@
     "start": "nodemon main.ts",
     "generate": "npx prisma generate",
     "migrate": "npx prisma migrate dev",
-    "generate-module": "node ./src/utils/generateModule.ts"
+    "generate-module": "node ./src/utils/generateModule.ts",
+    "docker:build": "docker-compose up --build"
   },
   "dependencies": {
     "@prisma/client": "^5.4.1",
     "@types/express": "^4.17.18",
-    "bcrypt": "^5.1.1",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.0",
     "dotenv": "^16.3.1",
@@ -20,7 +20,6 @@
     "typescript": "^5.2.2"
   },
   "devDependencies": {
-    "@types/bcrypt": "^5.0.0",
     "@types/express-session": "^1.17.9",
     "prisma": "^5.4.1"
   }

@@ -2,32 +2,33 @@ version: '3'
 name: 'fluxsales'
 
 services:
-  backend-fluxsales:
-    container_name: backend-fluxsales
-    build:
-      context: .
-      dockerfile: Dockerfile
+#   backend-fluxsales:
+#     container_name: backend-fluxsales
+#     restart: unless-stopped
+#     build:
+#       context: .
+#       dockerfile: Dockerfile
+#     volumes:
+#       - ./backend-fluxsales:/home/node/main
+#     ports:
+#       - "3000:3000"
+#     networks:
+#       - fluxsales
+
+  keycloak-fluxsales:
+    container_name: keycloak-fluxsales
+    image: quay.io/keycloak/keycloak:latest
+    restart: unless-stopped
+    environment:
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
     volumes:
-      - ./backend-fluxsales:/home/node/main
+      - ./.docker/keycloak/data/import:/opt/keycloak/data/import
+    command: start-dev
     ports:
-      - "3000:3000"
+      - "8080:8080"
     networks:
       - fluxsales
-
-  # keycloak-fluxsales:
-  #   container_name: keycloak-fluxsales
-  #   image: quay.io/keycloak/keycloak:latest
-  #   restart: unless-stopped
-  #   environment:
-  #     KEYCLOAK_ADMIN: admin
-  #     KEYCLOAK_ADMIN_PASSWORD: admin
-  #   volumes:
-  #     - ./.docker/keycloak/data/import:/opt/keycloak/data/import
-  #   command: start-dev
-  #   ports:
-  #     - "8080:8080"
-  #   networks:
-  #     - fluxsales
 
   # rabbitmq:
   #   image: rabbitmq:3.8.25-management-alpine

@@ -1,33 +1,39 @@
 import { Request, Response } from 'express';
-import {
-  createRole,
-  getRoleById,
-  setActiveOrInactiveRole,
-} from '../services/RolesService';
+import { RolesService } from '../services/RolesService';
+import { DefaultController } from '../../../defaults/Controller';
 
-export const register = async (req: Request, res: Response) => {
-  try {
-    const role = await createRole(req.body.name);
-    return res.status(200).send(role);
-  } catch (error: any) {
-    return res.status(error.statusCode || 500).json({ message: error.message });
-  }
-};
+class RolesController extends DefaultController {
+  private rolesService: RolesService;
 
-export const activeOrInactive = async (req: Request, res: Response) => {
-  try {
-    const role = await setActiveOrInactiveRole(req.body.id, req.body.active);
-    return res.status(200).send(role);
-  } catch (error: any) {
-    return res.status(error.statusCode || 500).json({ message: error.message });
+  constructor() {
+    super();
+    this.rolesService = new RolesService();
   }
-};
 
-export const getById = async (req: Request, res: Response) => {
-  try {
-    const role = await getRoleById(+req.params.id);
-    return res.status(200).send(role);
-  } catch (error: any) {
-    return res.status(error.statusCode || 500).json({ message: error.message });
+  public async register(req: Request, res: Response) {
+    return this.handleRequest(
+      async () => this.rolesService.createRole(req.body.name),
+      req,
+      res
+    );
   }
-};
+
+  public async activeOrInactive(req: Request, res: Response) {
+    return this.handleRequest(
+      async () =>
+        this.rolesService.setActiveOrInactiveRole(req.body.id, req.body.active),
+      req,
+      res
+    );
+  }
+
+  public async getById(req: Request, res: Response) {
+    return this.handleRequest(
+      async () => this.rolesService.getRoleById(+req.params.id),
+      req,
+      res
+    );
+  }
+}
+
+export default new RolesController();

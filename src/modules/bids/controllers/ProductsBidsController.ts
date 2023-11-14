@@ -1,13 +1,15 @@
 import { Request, Response } from 'express';
-import { createNewBid } from '../services/ProductsBidsService';
+import ProductsBidsService from '../services/ProductsBidsService';
 
-
-export const register = async (req: Request, res: Response) => {
-  try {
-    const product = await createNewBid(req.body);
-    return res.status(200).send(product);
-  } catch (error: any) {
-    return res.status(error.statusCode || 500).json({ message: error.message });
+class ProductsBidsController {
+  async register(req: Request, res: Response) {
+    try {
+      const product = await ProductsBidsService.createNewBid(req.body);
+      return res.status(200).send(product);
+    } catch (error: any) {
+      return res.status(error.statusCode || 500).json({ message: error.message });
+    }
   }
-};
+}
 
+export default new ProductsBidsController();

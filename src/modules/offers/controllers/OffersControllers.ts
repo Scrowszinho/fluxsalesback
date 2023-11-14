@@ -1,30 +1,38 @@
 import { Request, Response } from 'express';
-import { createNewOffer, getOfferById, getCompleteOfferById } from '../services/OffersServices';
+import OffersService from '../services/OffersServices';
+import { DefaultController } from '../../../defaults/Controller';
 
-export const register = async (req: Request, res: Response) => {
-  try {
-    const offer = await createNewOffer(req.body);
-    return res.status(200).send(offer);
-  } catch (error: any) {
-    return res.status(error.statusCode || 500).json({ message: error.message });
+class OffersController extends DefaultController {
+  private offerService: OffersService;
+
+  constructor() {
+    super();
+    this.offerService = new OffersService();
   }
-};
 
-export const getCompleteOffer = async (req: Request, res: Response) => {
-  try {
-    const offer = await getCompleteOfferById(+req.params.id);
-    return res.status(200).send(offer);
-  } catch (error: any) {
-    return res.status(error.statusCode || 500).json({ message: error.message });
+  async register(req: Request, res: Response) {
+    return this.handleRequest(
+      async () => this.offerService.createNewOffer(req.body),
+      req,
+      res
+    );
   }
-};
 
-export const getById = async (req: Request, res: Response) => {
-    try {
-      const offer = await getOfferById(+req.params.id);
-      return res.status(200).send(offer);
-    } catch (error: any) {
-      return res.status(error.statusCode || 500).json({ message: error.message });
-    }
-  };
-  
+  async getCompleteOffer(req: Request, res: Response) {
+    return this.handleRequest(
+      async () => this.offerService.getCompleteOfferById(+req.params.id),
+      req,
+      res
+    );
+  }
+
+  async getById(req: Request, res: Response) {
+    return this.handleRequest(
+      async () => this.offerService.getOfferById(+req.params.id),
+      req,
+      res
+    );
+  }
+}
+
+export default OffersController;

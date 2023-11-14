@@ -1,15 +1,19 @@
 import express from 'express';
-import { register, getProduct, getProductList } from '../controllers/ProductsController';
-const router =  express.Router();
+import ProductsController from '../controllers/ProductsController';
 
-router
-  .post('/', register)
-  
-router
-    .get('/list', getProductList)
+const router = express.Router();
+const productsController = new ProductsController();
 
-router
-  .get('/:id', getProduct)
+router.post('/', async (req, res) => {
+  await productsController.register(req, res);
+});
 
+router.get('/list', async (req, res) => {
+  await productsController.getProductList(req, res);
+});
+
+router.get('/:id', async (req, res) => {
+  await productsController.getProduct(req, res);
+});
 
 export default router;

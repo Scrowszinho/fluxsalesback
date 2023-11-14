@@ -1,24 +1,43 @@
 import { ApiError } from '../../../utils/apiError';
+import ProductsRepository from '../repositories/ProductsRepositories';
 import { ICreateProduct } from '../dto/products.interface';
-import { save, getById, getProducts } from '../repositories/ProductsRepositories';
 
-export const createNewProduct = async (data: ICreateProduct) => {
-  const product = await save(data);
-  return product;
-};
+class ProductsService {
+  private productsRepository: ProductsRepository;
 
-export const getProductById = async (id: number) => {
-  if (!id) {
-    throw new ApiError(404, 'Erro ao localizar produto');
+  constructor() {
+    this.productsRepository = new ProductsRepository();
   }
-  const product = await getById(id);
-  if (!product?.id) {
-    throw new ApiError(404, 'Produto não encontrado');
-  }
-  return product;
-};
 
-export const getProductsByList = async (offset: number, page: number) => {
-  const products = await getProducts(offset, page);
-  return products;
-};
+  async createNewProduct(data: ICreateProduct) {
+    try {
+      return await this.productsRepository.save(data);
+    } catch (error) {
+      throw new ApiError(500, 'Error creating a new product');
+    }
+  }
+
+  async getProductById(id: number) {
+    try {
+      const product = await this.productsRepository.getById(id);
+
+      if (!product) {
+        throw new ApiError(404, 'Product not found');
+      }
+
+      return product;
+    } catch (error) {
+      throw new ApiError(500, 'Error retrieving product by ID');
+    }
+  }
+
+  async getProductsByList(offset: number, pages: number) {
+    try {
+      return await this.productsRepository.getProducts(offset, pages);
+    } catch (error) {
+      throw new ApiError(500, 'Error retrieving product list');
+    }
+  }
+}
+
+export default ProductsService;

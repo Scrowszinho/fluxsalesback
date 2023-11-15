@@ -70,7 +70,6 @@ model products {
   active         Boolean  @default(true)
   created_date   DateTime @default(now())
   updated_at     DateTime @updatedAt
-  value_interval Float
   vale           Float    @default(0)
   final_value    Float    @default(0)
 
@@ -85,6 +84,7 @@ model offers {
   updated_at   DateTime @updatedAt
   start_date   DateTime
   end_date     DateTime
+  value_interval Float
   product_id   Int      @unique
 
   product   products    @relation(fields: [product_id], references: [id])

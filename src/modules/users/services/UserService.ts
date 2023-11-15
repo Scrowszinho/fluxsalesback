@@ -1,9 +1,7 @@
-import { validate } from 'class-validator';
 import { ApiError } from '../../../utils/apiError';
 import UserRepository from '../repositories/UserRepositories';
 import { IUserCreate } from '../dto/user.interface';
-import { CreateUserDto } from '../dto/CreateUserDto';
-import { plainToClass } from 'class-transformer';
+import { CreateUser } from '../dto/CreateUserDto';
 import { hashPassword } from '../../../utils/encrypt';
 
 class UserService {
@@ -15,13 +13,9 @@ class UserService {
 
   async createUser(user: IUserCreate) {
     try {
-      const userDto = plainToClass(CreateUserDto, user);
-      const validationErrors = await validate(userDto, {
-        skipMissingProperties: false,
-      });
-
-      if (validationErrors.length > 0) {
-        throw new ApiError(400, 'Algum campo está vazio');
+      const userDto = CreateUser.safeParse(user);
+      if (!userDto.success) {
+        throw new ApiError(400, userDto.error.issues[0].message);
       }
 
       if (await this.isEmailUsed(user.email)) {
@@ -33,8 +27,8 @@ class UserService {
 
       const newUser = await this.userRepository.saveUser(user);
       return newUser;
-    } catch (err) {
-      throw new ApiError(400, 'Ocorreu algum erro na criação de usuário');
+    } catch (err: any) {
+      throw new ApiError(err.statusCode, err.message);
     }
   }
 
@@ -48,8 +42,8 @@ class UserService {
           used = false;
         }
       },
-      (err) => {
-        throw new ApiError(400, err.message);
+      (err: any) => {
+        throw new ApiError(err.statusCode, err.message);
       }
     );
     return used;

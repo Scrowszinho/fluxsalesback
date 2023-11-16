@@ -1,6 +1,7 @@
 import { ApiError } from '../../../utils/apiError';
 import ProductsRepository from '../repositories/ProductsRepositories';
 import { ICreateProduct } from '../dto/products.interface';
+import { CreateProduct } from '../dto/CreateProducts';
 
 class ProductsService {
   private productsRepository: ProductsRepository;
@@ -11,9 +12,13 @@ class ProductsService {
 
   async createNewProduct(data: ICreateProduct) {
     try {
+      const product = CreateProduct.safeParse(data)
+      if (!product.success) {
+        throw new ApiError(400, product.error.issues[0].message);
+      }
       return await this.productsRepository.save(data);
-    } catch (error) {
-      throw new ApiError(500, 'Error creating a new product');
+    } catch (error: any) {
+      throw new ApiError(error.statusCode, error.message);
     }
   }
 

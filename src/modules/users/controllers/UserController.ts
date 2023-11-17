@@ -1,11 +1,23 @@
 import { Request, Response } from 'express';
-import { createUser } from '../services/UserService';
+import UserService from '../services/UserService';
+import { DefaultController } from '../../../defaults/Controller';
 
-export const register = async (req: Request, res: Response) => {
-  try {
-    const user = await createUser(req.body);
-    return res.status(200).send(user);
-  } catch (error: any) {
-    return res.status(error.statusCode || 500).json({ message: error.message });
+class UserController extends DefaultController {
+  private userService: UserService;
+
+  constructor() {
+    super();
+    this.userService = new UserService();
   }
-};
+
+  async register(req: Request, res: Response) {
+    return this.handleRequest(
+      async () =>
+        this.userService.createUser(req.body),
+      req,
+      res
+    );
+  }
+}
+
+export default UserController;

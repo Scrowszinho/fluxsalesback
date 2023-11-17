@@ -1,14 +1,19 @@
 import express from 'express';
-import { getById, getCompleteOffer, register } from '../controllers/OffersControllers';
-const router =  express.Router();
+import OffersController from '../controllers/OffersControllers';
 
-router
-  .post('/', register)
+const router = express.Router();
+const offersController = new OffersController();
 
-router
-  .get('/complete-offer/:id', getCompleteOffer)
+router.post('/', async (req, res) => {
+  await offersController.register(req, res);
+});
 
-router
-  .get('/:id', getById)
+router.get('/complete-offer/:id', async (req, res) => {
+  await offersController.getCompleteOffer(req, res);
+});
+
+router.get('/:id', async (req, res) => {
+  await offersController.getById(req, res);
+});
 
 export default router;

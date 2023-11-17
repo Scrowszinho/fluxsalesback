@@ -22,9 +22,6 @@ app.use(keycloak.middleware({
 app.use(routes);
 
 app.get('/', keycloak.protect("fluxsales:teste") , (req, res) => {
-  //@ts-ignore
-  console.log(req.kauth);
-  
   res.send({ hello: 'world' });
 });
 

@@ -1,16 +1,16 @@
 import dataSource from '../../../shared/db/dataSource';
 import { IUserCreate } from '../dto/user.interface';
 
-export const saveUser = async (user: IUserCreate) => {    
-  const newUser = await dataSource.users.create({
-    data: user
-  });
-  return newUser;
-};
+class UserRepository {
+  async saveUser(user: IUserCreate) {
+    return dataSource.users.create({
+      data: user,
+    });
+  }
 
-export const getUserByEmail = async (email: string) => {  
-  const user = await dataSource.users.findFirst({ where: {
-    email
-  } });  
-  return user;
+  async getUserByEmail(email: string) {
+    return dataSource.users.findFirst({ where: { email } });
+  }
 }
+
+export default UserRepository;

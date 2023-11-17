@@ -1,10 +1,10 @@
 import express from 'express';
-import { register } from '../controllers/ProductsBidsController';
-const router =  express.Router();
+import ProductsBidsController from '../controllers/ProductsBidsController';
 
-router
-  .post('/', register)
-  
+const router = express.Router();
 
+router.post('/', async (req, res) => {
+  await ProductsBidsController.register(req, res);
+});
 
 export default router;

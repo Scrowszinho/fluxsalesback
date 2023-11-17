@@ -1,59 +1,44 @@
-import { IOffer } from '../dto/offers.interface';
 import dataSource from '../../../shared/db/dataSource';
+import { IOffer } from '../dto/offers.interface';
 
-export const save = async (data: IOffer) => {
-  return dataSource.offers.create({
-    data,
-  });
-};
+class OffersRepository {
+  async save(data: IOffer) {
+    return dataSource.offers.create({
+      data,
+    });
+  }
 
-export const getOffer = async (id: number) => {
-  return dataSource.offers.findFirst({
-    where: { id },
-  });
-};
+  async getOffer(id: number) {
+    return dataSource.offers.findFirst({
+      where: { id },
+    });
+  }
 
-export const getOfferByProduct = async (id: number) => {
-  return dataSource.offers.findFirst({
-    where: { product_id: id },
-  });
-};
-
-export const updateTimeOffer = async (id: number, date: Date) => {
-  return dataSource.offers.update({
-    data: {
-      end_date: date,
-    },
-    where: {
-      id,
-    },
-  });
-};
-
-export const getCompleteOffer = async (id: number) => {
-  return await dataSource.offers.findFirst({
-    where: {
-      id,
-    },
-    include: {
-      offer_bid: {
-        include: {
-          user: {
-            select: {
-              name: true,
-            },
-          },
-        },
+  async updateTimeOffer(id: number, date: Date) {
+    return dataSource.offers.update({
+      data: {
+        end_date: date,
       },
-      product: {
-        include: {
-          user: {
-            select: {
-              name: true,
-            },
-          },
-        },
+      where: {
+        id,
       },
-    },
-  });
-};
+    });
+  }
+
+  async getOfferByProduct(id: number) {
+    return dataSource.offers.findFirst({
+      where: { product_id: id },
+    });
+  }
+
+  async getCompleteOffer(id: number) {
+    return dataSource.offers.findFirst({
+      where: { id },
+      include: {
+        product: true,
+      },
+    });
+  }
+}
+
+export default OffersRepository;

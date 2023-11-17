@@ -3,5 +3,4 @@ export interface ICreateProduct {
   user_id: number;
   weight: number;
   description: string;
-  value_interval: number;
 }

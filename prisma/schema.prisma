@@ -1,6 +1,6 @@
 generator client {
-  provider = "prisma-client-js"
-    binaryTargets = ["native", "debian-openssl-1.1.x"]
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "debian-openssl-1.1.x"]
 }
 
 datasource db {
@@ -62,30 +62,30 @@ model user_activate {
 }
 
 model products {
-  id             Int      @id @default(autoincrement())
-  name           String
-  user_id        Int
-  weight         Float
-  description    String
-  active         Boolean  @default(true)
-  created_date   DateTime @default(now())
-  updated_at     DateTime @updatedAt
-  value_interval Float
-  vale           Float    @default(0)
-  final_value    Float    @default(0)
+  id           Int      @id @default(autoincrement())
+  name         String
+  user_id      Int
+  weight       Float
+  description  String
+  active       Boolean  @default(true)
+  created_date DateTime @default(now())
+  updated_at   DateTime @updatedAt
+  value        Float    @default(0)
+  final_value  Float    @default(0)
 
   user   users    @relation(fields: [user_id], references: [id])
   offers offers[]
 }
 
 model offers {
-  id           Int      @id @default(autoincrement())
-  active       Boolean  @default(true)
-  created_date DateTime @default(now())
-  updated_at   DateTime @updatedAt
-  start_date   DateTime
-  end_date     DateTime
-  product_id   Int      @unique
+  id             Int      @id @default(autoincrement())
+  active         Boolean  @default(true)
+  created_date   DateTime @default(now())
+  updated_at     DateTime @updatedAt
+  start_date     DateTime
+  end_date       DateTime
+  value_interval Float    @default(0)
+  product_id     Int      @unique
 
   product   products    @relation(fields: [product_id], references: [id])
   offer_bid offer_bid[]

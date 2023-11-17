@@ -1,23 +1,27 @@
 import dataSource from '../../../shared/db/dataSource';
 import { ICreateProduct } from '../dto/products.interface';
 
-export const save = async (data: ICreateProduct) => {
-   return await dataSource.products.create({
-        data
+class ProductsRepository {
+  async save(data: ICreateProduct) {
+    return dataSource.products.create({
+      data,
     });
+  }
+
+  async getById(id: number) {
+    return dataSource.products.findFirst({
+      where: {
+        id,
+      },
+    });
+  }
+
+  async getProducts(offset: number, pages: number) {
+    return dataSource.products.findMany({
+      skip: offset,
+      take: pages,
+    });
+  }
 }
 
-export const getById = async (id: number) => {
-    return await dataSource.products.findFirst({
-        where: {
-            id
-        }
-    });
-}
-
-export const getProducts = async (offset: number, pages: number) => {    
-    return await dataSource.products.findMany({
-       skip: offset,
-       take: pages
-    });
-}
+export default ProductsRepository;

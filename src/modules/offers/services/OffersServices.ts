@@ -1,46 +1,57 @@
 import { ApiError } from '../../../utils/apiError';
-import { getProductById } from '../../products/services/ProductsService';
 import { IOffer } from '../dto/offers.interface';
-import { save, getOffer, getOfferByProduct, updateTimeOffer, getCompleteOffer } from '../repositories/OffersRepositories';
+import ProductsService from '../../products/services/ProductsService';
+import OffersRepository from '../repositories/OffersRepositories';
 
-export const createNewOffer = async (data: IOffer) => {
-    const product = await getProductById(data.product_id);
+class OffersService {
+  private productService: ProductsService;
+  private offerRepository: OffersRepository;
+  constructor() {
+    this.productService = new ProductsService();
+    this.offerRepository = new OffersRepository();
+  }
+  
+  async createNewOffer(data: IOffer) {
+    const product = await this.productService.getProductById(data.product_id);
     if (!product.id) {
-        throw new ApiError(404, 'Produto não encontrado')
+      throw new ApiError(404, 'Produto não encontrado');
     }
-    return await save(data);
-}
+    return await this.offerRepository.save(data);
+  }
 
-export const getOfferById = async (id: number) => {
-    const offer = await getOffer(id);
+  async getOfferById(id: number) {
+    const offer = await this.offerRepository.getOffer(id);
     if (!offer) {
-        throw new ApiError(404, 'Oferta não encontrada')
+      throw new ApiError(404, 'Oferta não encontrada');
     }
     return offer;
-}
+  }
 
-export const updateTimeOfferByBid = async (id: number) => {
-    const getOffer = await getOfferById(id);
+  async updateTimeOfferByBid(id: number) {
+    const getOffer = await this.getOfferById(id);
     if (!getOffer) {
-        throw new ApiError(404, 'Oferta não encontrada')
+      throw new ApiError(404, 'Oferta não encontrada');
     }
     const date = getOffer.end_date;
     date.setSeconds(date.getSeconds() + 15);
-    return await updateTimeOffer(id, date);
-}
+    return await this.offerRepository.updateTimeOffer(id, date);
+  }
 
-export const getOfferByproductId = async (id: number) => {
-    const offer = await getOfferByProduct(id);
+  async getOfferByproductId(id: number) {
+    const offer = await this.offerRepository.getOfferByProduct(id);
     if (!offer) {
-        throw new ApiError(404, 'Produto não encontrado')
+      throw new ApiError(404, 'Produto não encontrado');
     }
     return offer;
-}
+  }
 
-export const getCompleteOfferById = async (id: number) => {
-    const offer =  await getCompleteOffer(id);
+  async getCompleteOfferById(id: number) {
+    const offer = await this.offerRepository.getCompleteOffer(id);
     if (!offer) {
-        throw new ApiError(404, 'Oferta não encontrada')
+      throw new ApiError(404, 'Oferta não encontrada');
     }
     return offer;
+  }
 }
+
+export default OffersService;

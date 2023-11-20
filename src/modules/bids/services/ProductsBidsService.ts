@@ -42,7 +42,7 @@ class ProductsBidsService {
       );
     }
 
-    if (data.value >= lastBid.value + product.value_interval) {
+    if (data.value >= lastBid.value + offer.value_interval) {
       const updateOffer = await this.offerService.updateTimeOfferByBid(
         data.offer_id
       );
@@ -50,7 +50,7 @@ class ProductsBidsService {
     } else {
       throw new ApiError(
         400,
-        `O lance tem que ter uma diferença mínima de R$ ${product.value_interval.toFixed(
+        `O lance tem que ter uma diferença mínima de R$ ${offer.value_interval.toFixed(
           2
         )}`
       );

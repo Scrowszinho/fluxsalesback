@@ -13,6 +13,10 @@ class OffersService {
   
   async createNewOffer(data: IOffer) {
     const product = await this.productService.getProductById(data.product_id);
+    const offer = await this.getOfferByproductId(data.product_id);
+    if(offer) {
+      throw new ApiError(400, 'Uma oferta ja esta utilizando este produto');
+    }
     if (!product.id) {
       throw new ApiError(404, 'Produto não encontrado');
     }

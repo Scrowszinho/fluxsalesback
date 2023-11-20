@@ -24,23 +24,24 @@ class ProductsService {
 
   async getProductById(id: number) {
     try {
+      
       const product = await this.productsRepository.getById(id);
-
+      
       if (!product) {
-        throw new ApiError(404, 'Product not found');
+        throw new ApiError(404, 'Produto não encontrado');
       }
 
       return product;
-    } catch (error) {
-      throw new ApiError(500, 'Error retrieving product by ID');
+    } catch (error: any) {
+      throw new ApiError(error.statusCode, error.message);
     }
   }
 
   async getProductsByList(offset: number, pages: number) {
     try {
       return await this.productsRepository.getProducts(offset, pages);
-    } catch (error) {
-      throw new ApiError(500, 'Error retrieving product list');
+    } catch (error: any) {
+      throw new ApiError(error.statusCode, error.message);
     }
   }
 }

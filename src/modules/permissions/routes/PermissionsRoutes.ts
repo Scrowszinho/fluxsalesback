@@ -1,14 +1,12 @@
 import express from 'express';
-import { getPermissionById, register, savePermissionsToRoles } from '../controllers/PermissionsController';
-const router =  express.Router();
+import PermissionsController from '../controllers/PermissionsController';
 
-router
-  .post('/', register)
+const router = express.Router();
 
-router
-  .get('/:id', getPermissionById)
+router.post('/', PermissionsController.register);
 
-router
-  .post('/to-role', savePermissionsToRoles)
+router.get('/:permissionId', PermissionsController.getPermissionById);
+
+router.post('/to-role', PermissionsController.savePermissionsToRoles);
 
 export default router;

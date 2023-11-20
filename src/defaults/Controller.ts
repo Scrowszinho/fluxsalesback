@@ -12,7 +12,7 @@ export class DefaultController {
     } catch (error: any) {
       return res
         .status(error.statusCode || 500)
-        .json({ message: error.message });
+        .json({ message: error.message, statusCode: error.statusCode });
     }
   }
 }

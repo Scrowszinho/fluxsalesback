@@ -1,14 +1,14 @@
 import { Request, Response } from 'express';
 import ProductsBidsService from '../services/ProductsBidsService';
+import { DefaultController } from '../../../defaults/Controller';
 
-class ProductsBidsController {
-  async register(req: Request, res: Response) {
-    try {
-      const product = await ProductsBidsService.createNewBid(req.body);
-      return res.status(200).send(product);
-    } catch (error: any) {
-      return res.status(error.statusCode || 500).json({ message: error.message });
-    }
+class ProductsBidsController extends DefaultController {
+  public async register(req: Request, res: Response) {
+    return this.handleRequest(
+      async () => ProductsBidsService.createNewBid(req.body),
+      req,
+      res
+    );
   }
 }
 

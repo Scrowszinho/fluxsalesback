@@ -2,47 +2,32 @@ version: '3'
 name: 'fluxsales'
 
 services:
-#   backend-fluxsales:
-#     container_name: backend-fluxsales
-#     restart: unless-stopped
-#     build:
-#       context: .
-#       dockerfile: Dockerfile
-#     volumes:
-#       - ./backend-fluxsales:/home/node/main
-#     ports:
-#       - "3000:3000"
-#     networks:
-#       - fluxsales
-
-  keycloak-fluxsales:
-    container_name: keycloak-fluxsales
-    image: quay.io/keycloak/keycloak:latest
+  backend-fluxsales:
+    container_name: backend-fluxsales
     restart: unless-stopped
-    environment:
-      KEYCLOAK_ADMIN: admin
-      KEYCLOAK_ADMIN_PASSWORD: admin
+    build:
+      context: .
+      dockerfile: Dockerfile
     volumes:
-      - ./.docker/keycloak/data/import:/opt/keycloak/data/import
-    command: start-dev
+      - ./backend-fluxsales:/home/node/main
     ports:
-      - "8080:8080"
+      - "3000:3000"
     networks:
       - fluxsales
 
-  # rabbitmq:
-  #   image: rabbitmq:3.8.25-management-alpine
-  #   container_name: rabbitmq-fluxsales
-  #   ports:
-  #       - 5672:5672
-  #       - 15672:15672
-  #   environment:
-  #     - RABBITMQ_DEFAULT_USER=root
-  #     - RABBITMQ_DEFAULT_PASS=1234
-  #   depends_on:
-  #     - backend-fluxsales
-  #   networks:
-  #     - fluxsales
+  rabbitmq:
+    image: rabbitmq:3.8.25-management-alpine
+    container_name: rabbitmq-fluxsales
+    ports:
+        - 5672:5672
+        - 15672:15672
+    environment:
+      - RABBITMQ_DEFAULT_USER=root
+      - RABBITMQ_DEFAULT_PASS=1234
+    depends_on:
+      - backend-fluxsales
+    networks:
+      - fluxsales
 
 networks:
   fluxsales:

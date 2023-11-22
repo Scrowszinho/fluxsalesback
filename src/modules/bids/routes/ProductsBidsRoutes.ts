@@ -3,8 +3,6 @@ import ProductsBidsController from '../controllers/ProductsBidsController';
 
 const router = express.Router();
 
-router.post('/', async (req, res) => {
-  await ProductsBidsController.register(req, res);
-});
+router.post('/', ProductsBidsController.register);
 
 export default router;

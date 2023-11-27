@@ -1,6 +1,5 @@
 import express from 'express';
 import RolesController from '../controllers/RolesController';
-import keycloak from '../../../config/keycloak';
 
 const router = express.Router();
 

@@ -31,9 +31,22 @@ export const CreateUser = zod.object({
       invalid_type_error: 'Digite um telefone valido',
     })
     .min(10, 'Telefone com tamanho invalido'),
-  born_date: zod
+  born_date: zod.string({
+    required_error: 'Data de Nascimento precisa ser preenchido',
+    invalid_type_error: 'Digite uma data de nascimento valida',
+  }),
+});
+
+export const LoginUser = zod.object({
+  email: zod
     .string({
-      required_error: 'Data de Nascimento precisa ser preenchido',
-      invalid_type_error: 'Digite uma data de nascimento valida',
+      required_error: 'Email precisa ser preenchido',
+      invalid_type_error: 'Digite um email valido',
+    })
+    .email('Digite um email valido'),
+  password: zod
+    .string({
+      required_error: 'Senha precisa ser preenchido',
+      invalid_type_error: 'Digite uma senha valida',
     })
 });

@@ -2,32 +2,44 @@ version: '3'
 name: 'fluxsales'
 
 services:
-  backend-fluxsales:
-    container_name: backend-fluxsales
-    restart: unless-stopped
-    build:
-      context: .
-      dockerfile: Dockerfile
-    volumes:
-      - ./backend-fluxsales:/home/node/main
-    ports:
-      - "3000:3000"
-    networks:
-      - fluxsales
+  # backend-fluxsales:
+  #   container_name: backend-fluxsales
+  #   restart: unless-stopped
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile
+  #   volumes:
+  #     - ./backend-fluxsales:/home/node/main
+  #   ports:
+  #     - "3000:3000"
+  #   networks:
+  #     - fluxsales
 
-  rabbitmq:
-    image: rabbitmq:3.8.25-management-alpine
-    container_name: rabbitmq-fluxsales
-    ports:
-        - 5672:5672
-        - 15672:15672
+  # rabbitmq:
+  #   image: rabbitmq:3.8.25-management-alpine
+  #   container_name: rabbitmq-fluxsales
+  #   ports:
+  #       - 5672:5672
+  #       - 15672:15672
+  #   environment:
+  #     - RABBITMQ_DEFAULT_USER=root
+  #     - RABBITMQ_DEFAULT_PASS=1234
+  #   depends_on:
+  #     - backend-fluxsales
+  #   networks:
+  #     - fluxsales
+
+  mysql:
+    image: mysql:5.7
+    container_name: database-mysql
+    restart: always
+    platform: linux/amd64
     environment:
-      - RABBITMQ_DEFAULT_USER=root
-      - RABBITMQ_DEFAULT_PASS=1234
-    depends_on:
-      - backend-fluxsales
-    networks:
-      - fluxsales
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE:fluxsales
+      - MYSQL_PASSWORD:root
+    ports:
+      - "3306:3306"
 
 networks:
   fluxsales:

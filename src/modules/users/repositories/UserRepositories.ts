@@ -11,6 +11,16 @@ class UserRepository {
   async getUserByEmail(email: string) {
     return dataSource.users.findFirst({ where: { email } });
   }
+
+  async getUserByEmailClean(email: string) {
+    return dataSource.users.findFirst({ where: { email }, select: {
+      email: true,
+      name: true,
+      password: true,
+      born_date: true,
+      id: true,
+    } });
+  }
 }
 
 export default UserRepository;

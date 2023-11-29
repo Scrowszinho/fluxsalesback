@@ -40,7 +40,7 @@ class UserService {
         throw new ApiError(400, userDto.error.issues[0].message);
       }
 
-      if (await this.isEmailUsed(user.email)) {
+      if (await !this.isEmailUsed(user.email)) {
         throw new ApiError(400, 'Usuario não encontrado');
       }
 

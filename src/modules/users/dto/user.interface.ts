@@ -24,4 +24,5 @@ export interface IUserClean {
 export interface IUserLoged {
   user: IUserClean,
   token: string
+  expires_in: Date
 }

@@ -4,6 +4,7 @@ import { IUserCreate, IUserLoged, IUserLogin } from '../dto/user.interface';
 import { CreateUser, LoginUser } from '../dto/CreateUserDto';
 import { hashPassword, checkPassword } from '../../../utils/encrypt';
 import jwt from 'jsonwebtoken';
+import { addHours } from 'date-fns';
 
 class UserService {
   private userRepository: UserRepository;
@@ -56,7 +57,8 @@ class UserService {
           name: data.name,
           email: data.email
         },
-        token: this.generateToken(data.id)
+        token: this.generateToken(data.id),
+        expires_in: addHours(new Date(), 6)
       }
       return logedUser;
     } catch (err: any) {

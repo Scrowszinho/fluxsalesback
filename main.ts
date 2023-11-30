@@ -1,8 +1,15 @@
 import express from 'express';
 import routes from './src';
+import cors, { CorsOptions } from 'cors';
 const app = express();
-app.use(express.json());
 
+const corsOptions : CorsOptions = {
+  origin: 'http://localhost:4200',
+  optionsSuccessStatus: 200
+}
+
+app.use(express.json());
+app.use(cors(corsOptions))
 app.use(routes);
 
 app.get('/' , (req, res) => {

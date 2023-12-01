@@ -13,15 +13,16 @@ model users {
   name          String
   email         String          @unique
   password      String
-  document      String          @unique
-  phone         String          @unique
-  born_date     String
+  document      String          @unique @default("")
+  phone         String          @unique @default("")
+  born_date     String          @default("")
   active        Boolean         @default(true)
   created_date  DateTime        @default(now())
   updated_at    DateTime        @updatedAt
   user_activate user_activate[]
   products      products[]
   offer_bid     offer_bid[]
+  user_roles    user_roles[]
 }
 
 model roles {
@@ -31,6 +32,7 @@ model roles {
   created_date      DateTime            @default(now())
   updated_at        DateTime            @updatedAt
   roles_permissions roles_permissions[]
+  user_roles        user_roles[]
 }
 
 model permissions {
@@ -42,6 +44,14 @@ model permissions {
   updated_at        DateTime            @updatedAt
   description       String
   roles_permissions roles_permissions[]
+}
+
+model user_roles {
+  id      Int   @id @default(autoincrement())
+  user_id Int
+  role_id Int
+  user    users @relation(fields: [user_id], references: [id])
+  roles   roles @relation(fields: [role_id], references: [id])
 }
 
 model roles_permissions {

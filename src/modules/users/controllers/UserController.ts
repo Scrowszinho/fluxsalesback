@@ -18,6 +18,15 @@ class UserController extends DefaultController {
       res
     );
   }
+
+  async login(req: Request, res: Response) {
+    return this.handleRequest(
+      async () =>
+        this.userService.login(req.body),
+      req,
+      res
+    );
+  }
 }
 
 export default UserController;

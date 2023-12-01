@@ -8,4 +8,8 @@ router.post('/', async (req, res) => {
   await userController.register(req, res);
 });
 
+router.post('/login', async (req, res) => {
+  await userController.login(req, res);
+});
+
 export default router;

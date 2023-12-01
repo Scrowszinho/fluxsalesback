@@ -10,7 +10,7 @@ class ProductsService {
     this.productsRepository = new ProductsRepository();
   }
 
-  async createNewProduct(data: ICreateProduct) {
+  async createNewProduct(data: ICreateProduct) {    
     try {
       const product = CreateProduct.safeParse(data)
       if (!product.success) {

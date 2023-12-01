@@ -1,30 +1,21 @@
 import express from 'express';
 import routes from './src';
-import keycloak, { keycloackSession } from './src/config/keycloak';
-import session from 'express-session';
-
+import cors, { CorsOptions } from 'cors';
 const app = express();
-const port = 3000;
+
+const corsOptions : CorsOptions = {
+  origin: 'http://localhost:4200',
+  optionsSuccessStatus: 200
+}
+
 app.use(express.json());
-app.use(session({
-  secret: '1234567890',
-  resave: false,
-  saveUninitialized: true,
-  store: keycloackSession,
-  cookie: {
-    maxAge: 1000 * 60 * 3600
-  },
-}));
-app.use(keycloak.middleware({
-  logout: '/logout',
-  admin: '/'
-}));
+app.use(cors(corsOptions))
 app.use(routes);
 
-app.get('/', keycloak.protect("fluxsales:teste") , (req, res) => {
+app.get('/' , (req, res) => {
   res.send({ hello: 'world' });
 });
 
-app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
+app.listen(process.env.API_PORT, () => {
+  console.log(`Server is running on port ${process.env.API_PORT}`);
 });

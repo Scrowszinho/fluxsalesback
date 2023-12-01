@@ -15,6 +15,7 @@ class PermissionsService {
   }
 
   async createPermission(data: IPermissionCreate) {
+    delete data.user_id;
     const formatedData = CreatePermission.safeParse(data);
     if (!formatedData.success) {
       throw new ApiError(400, formatedData.error.issues[0].message);
@@ -35,6 +36,7 @@ class PermissionsService {
 
   async savePermissionsToRole(data: IPermissionToRoleCreate) {
     const dataFormated: IPermissionsToRoleFormated[] = [];
+    delete data.user_id;
     data.permissions.forEach((permission) => {
       dataFormated.push({ permission_id: permission, role_id: data.role_id });
     });

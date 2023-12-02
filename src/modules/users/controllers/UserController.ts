@@ -27,6 +27,15 @@ class UserController extends DefaultController {
       res
     );
   }
+
+  async update(req: Request, res: Response) {
+    return this.handleRequest(
+      async () =>
+        this.userService.updateUser(req.body),
+        req,
+        res
+    );
+  }
 }
 
 export default UserController;

@@ -1,7 +1,14 @@
 import { ApiError } from '../../../utils/apiError';
 import UserRepository from '../repositories/UserRepositories';
-import { IUserCreate, IUserLoged, IUserLogin } from '../dto/user.interface';
-import { CreateUser, LoginUser } from '../dto/CreateUserDto';
+import {
+  IUpdateUser,
+  IUser,
+  IUserCreate,
+  IUserLoged,
+  IUserLogin,
+  IUserUpdate,
+} from '../dto/user.interface';
+import { CreateUser, LoginUser, UpdateUser } from '../dto/CreateUserDto';
 import { hashPassword, checkPassword } from '../../../utils/encrypt';
 import jwt from 'jsonwebtoken';
 import { addHours } from 'date-fns';
@@ -46,20 +53,20 @@ class UserService {
       }
 
       const data = await this.userRepository.getUserByEmailClean(user.email);
-      if(!data) {
+      if (!data) {
         throw new ApiError(400, 'Ocorreu algum erro ao entrar');
       }
 
       await this.isPasswordValid(user.password, data.password);
-      const logedUser : IUserLoged = {
+      const logedUser: IUserLoged = {
         user: {
-          born_date: data.born_date,
+          born_date: data.born_date ?? '',
           name: data.name,
-          email: data.email
+          email: data.email,
         },
         token: this.generateToken(data.id),
-        expires_in: addHours(new Date(), 6)
-      }
+        expires_in: addHours(new Date(), 6),
+      };
       return logedUser;
     } catch (err: any) {
       throw new ApiError(err.statusCode, err.message);
@@ -69,7 +76,7 @@ class UserService {
   async isPasswordValid(password: string, passwordHashed: string) {
     try {
       const isValid = await checkPassword(password, passwordHashed);
-      if(!isValid) {
+      if (!isValid) {
         throw new ApiError(400, 'Senha incorreta');
       }
     } catch (err: any) {
@@ -88,7 +95,6 @@ class UserService {
     }
   }
 
-
   async isEmailUsed(email: string) {
     let used = false;
     await this.userRepository.getUserByEmail(email).then(
@@ -102,8 +108,20 @@ class UserService {
       (err: any) => {
         throw new ApiError(err.statusCode, err.message);
       }
-    );
-    return used;
+      );
+      return used;
+  }
+
+  async updateUser(user: IUserUpdate) {
+    try {
+      const userDto = UpdateUser.safeParse(user);
+      if (!userDto.success) {
+        throw new ApiError(400, userDto.error.issues[0].message);
+      }
+      return this.userRepository.updateUser(user);
+    } catch (err: any) {
+      throw new ApiError(err.statusCode, err.message);
+    }
   }
 }
 

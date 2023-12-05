@@ -33,6 +33,14 @@ class OffersController extends DefaultController {
       res
     );
   }
+
+  async getOffers(req: Request, res: Response) {
+    return this.handleRequest(
+      async () => this.offerService.getOffers(req.query),
+      req,
+      res
+    );
+  }
 }
 
 export default OffersController;

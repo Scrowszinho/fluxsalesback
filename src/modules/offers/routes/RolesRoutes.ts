@@ -8,6 +8,10 @@ router.post('/', async (req, res) => {
   await offersController.register(req, res);
 });
 
+router.get('/', async (req, res) => {
+  await offersController.getOffers(req, res);
+});
+
 router.get('/complete-offer/:id', async (req, res) => {
   await offersController.getCompleteOffer(req, res);
 });

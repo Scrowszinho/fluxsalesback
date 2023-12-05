@@ -13,11 +13,11 @@ class OffersService {
   
   async createNewOffer(data: IOffer) {
     const product = await this.productService.getProductById(data.product_id);
-    const offer = await this.getOfferByproductId(data.product_id);
+    const offer = await this.isOfferCreated(data.product_id);    
     if(offer) {
       throw new ApiError(400, 'Uma oferta ja esta utilizando este produto');
     }
-    if (!product.id) {
+    if (!product.id) {      
       throw new ApiError(404, 'Produto não encontrado');
     }
     return await this.offerRepository.save(data);
@@ -41,12 +41,9 @@ class OffersService {
     return await this.offerRepository.updateTimeOffer(id, date);
   }
 
-  async getOfferByproductId(id: number) {
-    const offer = await this.offerRepository.getOfferByProduct(id);
-    if (!offer) {
-      throw new ApiError(404, 'Produto não encontrado');
-    }
-    return offer;
+  async isOfferCreated(id: number) {
+    const offer = await this.offerRepository.getOfferByProduct(id);    
+    return offer?.id;
   }
 
   async getCompleteOfferById(id: number) {
@@ -55,6 +52,13 @@ class OffersService {
       throw new ApiError(404, 'Oferta não encontrada');
     }
     return offer;
+  }
+
+  async getOffers(params: any) {
+    const take = params.take ? +params.take : 1;
+    const skip = params.skip ? +params.skip : 0
+    const offers = await this.offerRepository.getOffers(take, skip);
+    return offers
   }
 }
 

@@ -36,14 +36,29 @@ class OffersRepository {
       where: { id },
       include: {
         product: {
-          include: {
+          select: {
+            id: true,
+            name: true,
+            description: true,
+            value: true,
+            final_value: true,
             user: {
               select: {
-                name: true,
-              },
-            },
+                name: true
+              }
+            }
           },
         },
+        offer_bid: {
+          orderBy: {
+            value: 'desc'
+          },
+        },
+        _count: {
+          select: {
+            offer_bid: true
+          }
+        }
       },
     });
   }

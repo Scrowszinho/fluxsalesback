@@ -1,5 +1,5 @@
 import { ApiError } from '../../../utils/apiError';
-import { IOffer, IOfferFormated } from '../dto/offers.interface';
+import { ICompleteOffer, IOffer, IOfferFormated } from '../dto/offers.interface';
 import ProductsService from '../../products/services/ProductsService';
 import OffersRepository from '../repositories/OffersRepositories';
 
@@ -51,7 +51,13 @@ class OffersService {
     if (!offer) {
       throw new ApiError(404, 'Oferta não encontrada');
     }
-    return offer;
+    const formated : ICompleteOffer = {
+      ...offer,
+      last_bid: offer?.offer_bid.length ? offer?.offer_bid[0].value : 0,
+      bids: offer?._count.offer_bid ?? 0,
+    }
+    delete formated._count;
+    return formated;
   }
 
   async getOffers(params: any) {

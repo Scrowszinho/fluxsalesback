@@ -1,5 +1,5 @@
 import { ApiError } from '../../../utils/apiError';
-import { IOffer } from '../dto/offers.interface';
+import { IOffer, IOfferFormated } from '../dto/offers.interface';
 import ProductsService from '../../products/services/ProductsService';
 import OffersRepository from '../repositories/OffersRepositories';
 
@@ -58,7 +58,16 @@ class OffersService {
     const take = params.take ? +params.take : 1;
     const skip = params.skip ? +params.skip : 0
     const offers = await this.offerRepository.getOffers(take, skip);
-    return offers
+    const formated: IOfferFormated[] = [];    
+    offers.forEach(offer => formated.push({
+      id: offer.id,
+      bids: offer._count.offer_bid,
+      end_date: offer.end_date,
+      last_bid: offer.offer_bid.length ? offer.offer_bid[0].value : 0,
+      product_name: offer.product.name,
+      start_date: offer.start_date,
+    }));
+    return formated;
   }
 }
 

@@ -55,10 +55,13 @@ class OffersRepository {
         start_date: true,
         end_date: true,
         offer_bid: {
-          take: 1,
           orderBy: {
-            value: 'asc',
+            value: 'desc',
           },
+          select: {
+            value: true
+          },
+          take: 1
         },
         product: {
           select: {

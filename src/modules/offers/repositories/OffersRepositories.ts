@@ -35,8 +35,62 @@ class OffersRepository {
     return dataSource.offers.findFirst({
       where: { id },
       include: {
-        product: true,
+        product: {
+          select: {
+            id: true,
+            name: true,
+            description: true,
+            value: true,
+            final_value: true,
+            user: {
+              select: {
+                name: true
+              }
+            }
+          },
+        },
+        offer_bid: {
+          orderBy: {
+            value: 'desc'
+          },
+        },
+        _count: {
+          select: {
+            offer_bid: true
+          }
+        }
       },
+    });
+  }
+
+  async getOffers(take: number, skip: number) {
+    return dataSource.offers.findMany({
+      select: {
+        id: true,
+        start_date: true,
+        end_date: true,
+        offer_bid: {
+          orderBy: {
+            value: 'desc',
+          },
+          select: {
+            value: true
+          },
+          take: 1
+        },
+        product: {
+          select: {
+            name: true,
+          }
+        },
+        _count:{
+          select:{
+            offer_bid: true
+          }
+        }
+      },
+      take,
+      skip
     });
   }
 }

@@ -1,5 +1,5 @@
 import { ApiError } from '../../../utils/apiError';
-import { IOffer } from '../dto/offers.interface';
+import { ICompleteOffer, IOffer, IOfferFormated } from '../dto/offers.interface';
 import ProductsService from '../../products/services/ProductsService';
 import OffersRepository from '../repositories/OffersRepositories';
 
@@ -13,11 +13,11 @@ class OffersService {
   
   async createNewOffer(data: IOffer) {
     const product = await this.productService.getProductById(data.product_id);
-    const offer = await this.getOfferByproductId(data.product_id);
+    const offer = await this.isOfferCreated(data.product_id);    
     if(offer) {
       throw new ApiError(400, 'Uma oferta ja esta utilizando este produto');
     }
-    if (!product.id) {
+    if (!product.id) {      
       throw new ApiError(404, 'Produto não encontrado');
     }
     return await this.offerRepository.save(data);
@@ -41,12 +41,9 @@ class OffersService {
     return await this.offerRepository.updateTimeOffer(id, date);
   }
 
-  async getOfferByproductId(id: number) {
-    const offer = await this.offerRepository.getOfferByProduct(id);
-    if (!offer) {
-      throw new ApiError(404, 'Produto não encontrado');
-    }
-    return offer;
+  async isOfferCreated(id: number) {
+    const offer = await this.offerRepository.getOfferByProduct(id);    
+    return offer?.id;
   }
 
   async getCompleteOfferById(id: number) {
@@ -54,7 +51,29 @@ class OffersService {
     if (!offer) {
       throw new ApiError(404, 'Oferta não encontrada');
     }
-    return offer;
+    const formated : ICompleteOffer = {
+      ...offer,
+      last_bid: offer?.offer_bid.length ? offer?.offer_bid[0].value : 0,
+      bids: offer?._count.offer_bid ?? 0,
+    }
+    delete formated._count;
+    return formated;
+  }
+
+  async getOffers(params: any) {
+    const take = params.take ? +params.take : 1;
+    const skip = params.skip ? +params.skip : 0
+    const offers = await this.offerRepository.getOffers(take, skip);
+    const formated: IOfferFormated[] = [];    
+    offers.forEach(offer => formated.push({
+      id: offer.id,
+      bids: offer._count.offer_bid,
+      end_date: offer.end_date,
+      last_bid: offer.offer_bid.length ? offer.offer_bid[0].value : 0,
+      product_name: offer.product.name,
+      start_date: offer.start_date,
+    }));
+    return formated;
   }
 }
 

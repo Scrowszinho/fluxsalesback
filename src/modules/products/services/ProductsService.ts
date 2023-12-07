@@ -25,9 +25,8 @@ class ProductsService {
   async getProductById(id: number) {
     try {
       
-      const product = await this.productsRepository.getById(id);
-      
-      if (!product) {
+      const product = await this.productsRepository.getById(id);      
+      if (!product?.id) {
         throw new ApiError(404, 'Produto não encontrado');
       }
 
